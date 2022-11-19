@@ -85,12 +85,21 @@ const extractLinks = async (p) => {
 }
 
 const desprotectLink = async (p, link) => {    
+    try {
+        return await desprotectLinkPrivate(p, link)        
+    } catch (error) {
+        console.log('Retry desproct')
+        return await desprotectLinkPrivate(p, link)        
+    }
+}
+
+const desprotectLinkPrivate = async (p, link) => {    
     const page = await getPage(p)    
 
     console.log("Desprotecting link: " + link)    
 
     await page.goto(link)
-    await delay(3000)
+    await delay(6000)
 
     const linkDesprotected = await page.evaluate(`
         id = document.querySelector('#link-id').getAttribute("value");
@@ -100,6 +109,8 @@ const desprotectLink = async (p, link) => {
             .then(body => body.link) 
     `)
     
+    console.log("Desproted link: " + linkDesprotected)    
+
     return linkDesprotected
 }
 
