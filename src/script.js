@@ -17,7 +17,7 @@ const readDB = () => {
 
 (async () => {
     
-    const lines = (await fs.readFileSync('/home/lourran/Downloads/Animes Store/hime.ass', { encoding: 'utf8' })).split('\r\n');
+    const lines = (await fs.readFileSync('/home/lourran/Downloads/Animes Store/kage.ass', { encoding: 'utf8' })).split('\r\n');
     const dialoguesLine = lines.filter(s => s.startsWith('Dialogue'))
     const dialogues = dialoguesLine.map(s => {
         return {
@@ -54,7 +54,7 @@ const readDB = () => {
 
             continue;
         }
-
+        
         let translatedText = await translate(dialogue, { from: 'en', to: 'pt-br' });
 
         if (sentences.length > 1) {
@@ -101,6 +101,6 @@ const readDB = () => {
         return l.replace(line[0].from, line[0].to)
     }).join('\r\n')
 
-    await fs.writeFileSync('/home/lourran/Downloads/Animes Store/hime_pt-br.ass', translated);
+    await fs.writeFileSync('/home/lourran/Downloads/Animes Store/kage_pt-br.ass', translated);
 
 })()

@@ -11,7 +11,19 @@ function delay(time) {
     })
 }
 
+function awaitUntil(time, cb) {
+    return new Promise(function(resolve) { 
+        const it = setInterval(() => {
+            if (cb()) {
+                clearInterval(it)
+                resolve()
+            }
+        }, time)
+    })
+}
+
 module.exports = {
     getPage,
-    delay
+    delay,
+    awaitUntil
 }

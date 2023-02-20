@@ -1,4 +1,4 @@
-const { getPage, delay } = require('../utils/commons')
+const { getPage, delay } = require('../../utils/commons')
 
 const download = async (p, url) => {
     const page = await getPage(p)

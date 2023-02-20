@@ -5,6 +5,8 @@ let animesDownloaded = []
 
 const ANIMES_TO_DOWNLOAD = [
     // 'Koukyuu no Karasu',
+    'Onii-chan wa Oshimai!',
+    'Isekai Ojisan',
     'SPY×FAMILY ',
     'Yuusha Party wo Tsuihou Sareta Beast Tamer, Saikyoushu no Nekomimi Shoujo to Deau ',
     'Uzaki-chan wa Asobitai! ω 2° temporada',
@@ -42,7 +44,7 @@ const animeAlreadyDownloaded = (anime) => {
 
     if (findedOnList) return true
 
-    const filesFromDownloadFolder = fs.readdirSync('/home/lourran/Downloads')
+    const filesFromDownloadFolder = fs.readdirSync(process.env.DIR_DOWNLOAD)
     const filesFromHDFolder = fs.readdirSync('/media/lourran/BiggHD\ 3\ Lourran3')
 
     const allFiles = [].concat(filesFromHDFolder).concat(filesFromDownloadFolder).map(normalize)

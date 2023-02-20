@@ -1,4 +1,4 @@
-const { getPage, delay } = require('../utils/commons')
+const { getPage, delay } = require('../../utils/commons')
 
 const upload = async (p, fileToUpload) => {
     const page = await getPage(p)    
@@ -34,6 +34,14 @@ const upload = async (p, fileToUpload) => {
 
 
 const download = async (url) => {
+    return downloadAction(url, async (page) => {
+        await page.waitForFunction(
+            () => { return !!document.querySelector('#uc-download-link')},
+            { polling: 'raf', timeout: 1000 },
+        )
+
+        await page.evaluate(`document.querySelector('#uc-download-link').click()`)
+    }) 
 
     const browser = await puppeteer.launch({ headless: false });        
     const page = await browser.newPage();
