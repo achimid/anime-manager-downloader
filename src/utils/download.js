@@ -4,7 +4,7 @@ const path = require('path')
 const { delay, awaitUntil } = require('./commons')
 const { executeBrowser } = require('./puppeteer')
 
-const downloadFolder = process.env.DIR_DOWNLOAD
+const downloadFolder = process.env.DIR_TO_DOWNLOAD
 
 const getFileSize = (filename) => {
     var stats = fs.statSync(filename)

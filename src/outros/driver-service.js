@@ -4,7 +4,7 @@ const path = require( "path" )
 const { delay } = require('../utils/commons')
 const { executeBrowser } = require('../utils/puppeteer')
 
-const downloadPath = process.env.DIR_DOWNLOAD
+const downloadPath = process.env.DIR_TO_DOWNLOAD
 
 const download = async (url) => {
     return executeBrowser(async (page) => {

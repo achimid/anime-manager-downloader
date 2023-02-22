@@ -1,6 +1,52 @@
 const { delay } = require('../../utils/commons')
 const { executeBrowser } = require('../../utils/puppeteer')
 
+const { notify } = require('../../utils/notify')
+
+const download = require('./download-service')
+const animeService = require('./anime-service')
+
+
+const execute = async () => {
+
+    const atcAnimes = await extractLinks()
+    const atcAnimesToDownload = atcAnimes.filter(a => !animeService.animeAlreadyDownloaded(a.title))
+    
+    const linksToDownload = atcAnimesToDownload
+        .map(a => [...a.FullHD, ...a.HD, ...a.SD])
+        .map(d => d.filter(a => a.mirror == "Drive" || a.mirror == "Gofile"))    
+    
+    console.log(`\nForam encontrados ${atcAnimesToDownload.length} novos episódios para realizar o download`)
+    atcAnimesToDownload.forEach(a => console.log(a.title))
+
+    console.log('\n')
+    for (let i = 0; i < linksToDownload.length; i++) {
+        const animeMirror = linksToDownload[i];
+        const animePost = atcAnimesToDownload[i]
+        
+        console.log('Downloading anime ', animePost.title)
+
+        let fileDownload
+        try {
+            const driveLink = await desprotectLink(animeMirror.filter(d => d.mirror == "Drive")[0].url)
+            fileDownload = await download.drive(driveLink)    
+        } catch (error) {
+            const gofileLink = await desprotectLink(animeMirror.filter(d => d.mirror == "Gofile")[0].url)
+            fileDownload = await download.gofile(gofileLink)
+        }
+
+        console.log(fileDownload)
+
+        animeService.saveAnimeDownloaded(animePost.title, fileDownload)
+
+        // if (fileDownload.indexOf('[AnimesTC]') >= 0) move(path.basename(fileDownload))
+
+        notify(`[OK] ${animePost.title}`)
+    }
+    
+}
+
+
 const extractLinks = async () => {
     return executeBrowser(async (page) => {
         console.log("Navigating to AnimesTC")
@@ -118,6 +164,5 @@ const desprotectLinkPrivate = async (link) => {
 }
 
 module.exports = {
-    extractLinks,
-    desprotectLink,
+    execute
 }

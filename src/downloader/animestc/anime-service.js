@@ -1,38 +1,48 @@
+require('dotenv').config()
+
 const fs = require('fs')
 const stringSimilarity = require("string-similarity");
 
 let animesDownloaded = []
 
-const ANIMES_TO_DOWNLOAD = [
-    // 'Koukyuu no Karasu',
-    'Onii-chan wa Oshimai!',
+const ANIMES_TO_NOT_CONVERT = [
+    'Ayakashi Triangle',
+    'Benriya Saitou-san, Isekai ni Iku',
+    'Bofuri S2',
+    'Buddy Daddies',
+    'Eiyuuou, Bu wo Kiwameru Tame Tenseisu',
+    'Fumetsu no Anata e S2',
+    'Hyouken no Majutsushi ga Sekai wo Suberu',
+    'Inu ni Nattara Suki na Hito ni Hirowareta',
+    'Isekai Nonbiri Nouka',
     'Isekai Ojisan',
-    'SPY×FAMILY ',
-    'Yuusha Party wo Tsuihou Sareta Beast Tamer, Saikyoushu no Nekomimi Shoujo to Deau ',
-    'Uzaki-chan wa Asobitai! ω 2° temporada',
-    'Akuyaku Reijou nano de Last Boss wo Kattemimashita',
-    // 'Arknights: Reimei Zensou',
-    // 'Hoshi no Samidare',
-    'Seiken Densetsu: Legend of Mana - The Teardrop Crystal',
-    'Akiba Maid Sensou',
-    'Mushikaburi-hime',
-    'Futoku no Guild',
-    'Renai Flops',
-    'Kage no Jitsuryokusha ni Naritakute!',
-    'Tensei Shitara Ken Deshita',
-    'Mob Psycho 100 III 3° Temporada',
-    'Shinmai Renkinjutsushi no Tenpo Keiei',
-    'Shinobi no Ittoki',
-    'Shinmai Renkinjutsushi no Tenpo Keiei',
-    'Chainsaw Man',
-    'Peter Grill to Kenja no Jikan: Super Extra 2° temporada',
-    'Fuufu Ijou, Koibito Miman',
-    'Fumetsu no Anata e 2° Temporada',
-    'Noumin Kanren no Skill Bakka Agetetara Naze ka Tsuyoku Natta.',
-    // 'One Piece',
-    // 'Utawarerumono: Futari no Hakuoro',
-    'Uchi no Shishou wa Shippo ga Nai'
+    'Kage no Jitsuryokusha ni Naritakute',
+    'Kaiko sareta Ankoku Heishi (30-dai) no Slow na Second Life',
+    'Kami-tachi ni Hirowareta Otoko S2',
+    'Koori Zokusei Danshi to Cool na Douryou Joshi',
+    'Kubo-san wa Mob wo Yurusanai',
+    'Kyokou Suiri',
+    'Maou Gakuin no Futekigousha S2',
+    'Mononogatari',
+    'Ningen Fushin',
+    'Nokemono-tachi no Yoru',
+    'Oniichan wa Oshimai!',
+    'Otonari no Tenshi-sama ni Itsunomanika Dame Ningen ni Sareteita Ken',
+    'Rougo ni Sonaete Isekai de 8-manmai no Kinka wo Tamemasu',
+    'Saikyou Onmyouji no Isekai Tenseiki',
+    'Shinka no Mi S2',
+    'Spy Kyoushitsu',
+    'Sugar Apple Fairy Tale',
+    'Tomo-chan wa Onnanoko!',
+    'Tondemo Skill de Isekai Hourou Meshi',
+    'Tsundere Akuyaku Reijou Liselotte to Jikkyou no Endou-kun to Kaisetsu no Kobayashi-san',    
 ]
+
+const shouldConvertAnime = (name) => {
+    const bestMatch = stringSimilarity.findBestMatch(normalize(name), ANIMES_TO_NOT_CONVERT.map(normalize))
+    
+    return bestMatch.bestMatch.rating < 0.70   
+}
 
 const saveAnimeDownloaded = (anime, path) => {
     animesDownloaded.push({anime, path})
@@ -44,7 +54,7 @@ const animeAlreadyDownloaded = (anime) => {
 
     if (findedOnList) return true
 
-    const filesFromDownloadFolder = fs.readdirSync(process.env.DIR_DOWNLOAD)
+    const filesFromDownloadFolder = fs.readdirSync(process.env.DIR_TO_DOWNLOAD)
     const filesFromHDFolder = fs.readdirSync('/media/lourran/BiggHD\ 3\ Lourran3')
 
     const allFiles = [].concat(filesFromHDFolder).concat(filesFromDownloadFolder).map(normalize)
@@ -89,5 +99,5 @@ readDB()
 module.exports = {
     animeAlreadyDownloaded,
     saveAnimeDownloaded,
-    ANIMES_TO_DOWNLOAD
+    shouldConvertAnime
 }

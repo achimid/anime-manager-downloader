@@ -31,7 +31,7 @@ const executeBrowser = async (cbFunction, skipImage = false) => {
     const client = await page.target().createCDPSession()
     await client.send('Page.setDownloadBehavior', {
         behavior: 'allow',
-        downloadPath: process.env.DIR_DOWNLOAD,
+        downloadPath: process.env.DIR_TO_DOWNLOAD,
     })
 
     let rt
